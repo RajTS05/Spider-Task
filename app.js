@@ -12,7 +12,8 @@ var mouse={
 
 window.addEventListener('click',function(event){
   mouse.x = event.x
-  mouse.y=event.y;  
+  mouse.y=event.y; 
+
   
 })
 
@@ -24,6 +25,7 @@ function Circle(x,y,dx,dy,circleRadius)
   this.dy = dy;
   this.circleRadius = circleRadius;
   this.mass = this.circleRadius * this.circleRadius * this.circleRadius;
+  this.circleArea = this.circleRadius*this.circleRadius*Math.PI;
   this.draw = function(){
     ctx.beginPath();
     ctx.arc(this.x,this.y,this.circleRadius,0,Math.PI*2,false);
@@ -45,15 +47,18 @@ function Circle(x,y,dx,dy,circleRadius)
     this.x+=this.dx;
     this.y+=this.dy;
     this.draw();
-    if(mouse.x-this.x<this.circleRadius&&mouse.x-this.x>-this.circleRadius && mouse.y-this.y<this.circleRadius&&mouse.y-this.y>-this.circleRadius)
+    var d = distance(this,mouse);
+    if(d<this.circleRadius)
     {
         this.circleRadius=0;
+        this.circleArea=0;
         mouse.x=undefined;
         mouse.y=undefined;
+        var audio = new Audio('1.mp3');
+        audio.play();
     }
     else
     {
-        
     }
  
     
@@ -71,7 +76,6 @@ this.angle=function()
 }
 function distance(a, b) {
     return Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2);
-    console.log(Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2));
     
 }
 
@@ -123,32 +127,100 @@ function ballCollision()
     }
 }
 
-var circleArray = [];
-
-for(var i=0;i<50;i++)
+function scoreCalc()
 {   
-    var x = Math.random()*(W-circleRadius*2) + circleRadius;
-    var dx = (Math.random()-0.5)*8;
-    var y = Math.random()*(H-circleRadius*2)+circleRadius;
-    var dy = (Math.random()-0.5)*8;
-    var circleRadius = 30;
-    circleArray[i]=new Circle(x,y,dx,dy,circleRadius);
+    requestAnimationFrame(scoreCalc);
+    var score = 0;
+    for(var i =0;i<circleArray.length-1;i++)
+    {
+        if(circleArray[i].circleRadius==0)
+        {
+            score+=1;
+        }
+    }
+    ctx.beginPath();
+    ctx.font = "40px Georgia";
+    // var gradient = ctx.createLinearGradient(0, 0, 2*W/5, H*9/10);
+    // gradient.addColorStop("1.0", "red");
+    // ctx.fillStyle = gradient;
+    ctx.fillText(score ,2*W/5,H/10,W/5);
+    localStorage.setItem('score',score);
+    
+
 }
 
 
+function areaCheck()
+{   requestAnimationFrame(areaCheck);
+    var area=0;
+    for(i=0;i<circleArray.length-1;i++)
+    {
+      area+=circleArray[i].circleArea;
+    }
+    if(area>30*W*H/100)
+    {   
+        ctx.clearRect(0,0,W,H);
+        window.location.href="start.html";
+    }
+    if(area>20*W*H/100)
+    {   
+        ctx.font = "40px Georgia";
+        var gradient = ctx.createLinearGradient(0, 0, 2*W/5, H/10);
+        gradient.addColorStop("1.0", "red");
+        ctx.fillStyle = gradient;
+        ctx.fillText("Hurry up " +  parseInt(area*100/(W*H))+"% occupied" ,2*W/5,H/10,W/5);
+    }
+
+}
+var circleArray =new Array();
+scoreCalc();
+animate();
+areaCheck();
+var x = Math.random()*(W-circleRadius*2) + circleRadius;
+var dx = (Math.random()-0.5);
+var y = Math.random()*(H-circleRadius*2)+circleRadius;
+var dy = (Math.random()-0.5);
+var circleRadius = 20 + Math.random()*40;
+var time =0;
+var init =0;
+var endval=15;
+for(var i=0;i<100;i++)
+{   
+    if(i>init&&i<endval)
+    {
+        setTimeout(push,time);
+    }
+    if(i==endval)
+    {
+        init+=5;
+        endval+=5;
+        time+=5000*(200-2*i)/100;
+    }
+ 
+
+}
+
 
 function push()
-{}
+{   
+    x = Math.random()*(W-circleRadius*2) + circleRadius;
+    dx = (Math.random()-0.5)*4;
+    y = Math.random()*(H-circleRadius*2)+circleRadius;
+    dy = (Math.random()-0.5)*4;
+    circleRadius = H/20 + Math.random()*H/10;
+    circleArray.push(new Circle(x,y,dx,dy,circleRadius));
+}
 
 
 
 function animate()
 {   
+    
     requestAnimationFrame(animate);
     ctx.clearRect(0,0,W,H);
-    if(circleArray.length>1)
+    if(circleArray.length>0)
     {
-        for(var i=0;i<circleArray.length;i++)
+        for(var i=0;i<circleArray.length-1;i++)
         {
             circleArray[i].update();
         }
@@ -156,4 +228,5 @@ function animate()
    
   
 }
-animate();
+
+
