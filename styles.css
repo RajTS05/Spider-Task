@@ -1,16 +1,4 @@
-@media only screen and (max-width:1000px)
-{
-    header
-{
-    grid-column: 1/13;
-   
-}
-main
-{
-    grid-column: 1/13;
 
-}
-} 
 
 body
 {
@@ -33,6 +21,12 @@ main
     grid-row: 5/6;
     background-color: rgb(229, 127, 233);
     border-radius: 20px ;
+    grid-row: 9/10;
+}
+a
+{
+    grid-column: 5/9;
+    grid-row: 5/6;
 }
 
 .myButton {
@@ -59,8 +53,22 @@ main
 .myButton:active {
 	
 }
+@media only screen and (max-width:1000px)
+{
+    header
+{
+    grid-column: 1/13;
+   
+}
+main
+{
+    grid-column: 1/13;
+
+}
 a
 {
-    grid-column: 5/9;
-    grid-row: 9/10;
+    grid-column: 4/10;
+    grid-row: 5/6;
 }
+
+} 

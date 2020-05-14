@@ -138,12 +138,7 @@ function scoreCalc()
             score+=1;
         }
     }
-    ctx.beginPath();
-    ctx.font = "40px Georgia";
-    // var gradient = ctx.createLinearGradient(0, 0, 2*W/5, H*9/10);
-    // gradient.addColorStop("1.0", "red");
-    // ctx.fillStyle = gradient;
-    ctx.fillText(score ,2*W/5,H/10,W/5);
+  
     localStorage.setItem('score',score);
     
 
@@ -157,7 +152,7 @@ function areaCheck()
     {
       area+=circleArray[i].circleArea;
     }
-    if(area>30*W*H/100)
+    if(area>25*W*H/100)
     {   
         ctx.clearRect(0,0,W,H);
         window.location.href="start.html";
@@ -171,6 +166,7 @@ function areaCheck()
         ctx.fillText("Hurry up " +  parseInt(area*100/(W*H))+"% occupied" ,2*W/5,H/10,W/5);
     }
 
+   
 }
 var circleArray =new Array();
 scoreCalc();
@@ -180,11 +176,11 @@ var x = Math.random()*(W-circleRadius*2) + circleRadius;
 var dx = (Math.random()-0.5);
 var y = Math.random()*(H-circleRadius*2)+circleRadius;
 var dy = (Math.random()-0.5);
-var circleRadius = 20 + Math.random()*40;
+var circleRadius = W/20 + Math.random()*W/10;
 var time =0;
 var init =0;
 var endval=15;
-for(var i=0;i<100;i++)
+for(var i=0;i<500;i++)
 {   
     if(i>init&&i<endval)
     {
@@ -194,7 +190,7 @@ for(var i=0;i<100;i++)
     {
         init+=5;
         endval+=5;
-        time+=5000*(200-2*i)/100;
+        time+=5000*(1000-2*i)/500;
     }
  
 
@@ -207,24 +203,47 @@ function push()
     dx = (Math.random()-0.5)*4;
     y = Math.random()*(H-circleRadius*2)+circleRadius;
     dy = (Math.random()-0.5)*4;
-    circleRadius = H/20 + Math.random()*H/10;
-    circleArray.push(new Circle(x,y,dx,dy,circleRadius));
+    circleRadius = (W+H)/80 + Math.random()*(W+H)/40;
+    if(!pause)
+    {
+        circleArray.push(new Circle(x,y,dx,dy,circleRadius));
+    }
+    
 }
 
 
+var pause = 0;
+window.addEventListener('keypress',function(event){
+   if(event.keyCode==32)
+   {
+       if(pause==0)
+       {
+           pause=1;
 
+       }
+       else
+       {
+           pause=0;
+       }
+       console.log(pause);
+       
+   }
+})
 function animate()
-{   
-    
-    requestAnimationFrame(animate);
-    ctx.clearRect(0,0,W,H);
-    if(circleArray.length>0)
+{    requestAnimationFrame(animate);
+    if(!pause)
     {
-        for(var i=0;i<circleArray.length-1;i++)
+       
+        ctx.clearRect(0,0,W,H);
+        if(circleArray.length>0)
         {
-            circleArray[i].update();
+            for(var i=0;i<circleArray.length-1;i++)
+            {
+                circleArray[i].update();
+            }
         }
     }
+   
    
   
 }
