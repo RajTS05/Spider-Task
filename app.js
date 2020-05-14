@@ -172,6 +172,7 @@ function areaCheck()
         gradient.addColorStop("1.0", "red");
         ctx.fillStyle = gradient;
         ctx.fillText("Hit space to pause" ,2*W/5,H/10,W/5);
+        ctx.fillText("Keep it under 25" ,2*W/5,9*H/10,W/5);
     }
 
    
