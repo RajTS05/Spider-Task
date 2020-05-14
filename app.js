@@ -165,6 +165,14 @@ function areaCheck()
         ctx.fillStyle = gradient;
         ctx.fillText("Hurry up " +  parseInt(area*100/(W*H))+"% occupied" ,2*W/5,H/10,W/5);
     }
+    if(area<20*W*H/100)
+    {
+        ctx.font = "40px Georgia";
+        var gradient = ctx.createLinearGradient(0, 0, 2*W/5, H/10);
+        gradient.addColorStop("1.0", "red");
+        ctx.fillStyle = gradient;
+        ctx.fillText("Hit space to pause" ,2*W/5,H/10,W/5);
+    }
 
    
 }
@@ -180,7 +188,7 @@ var circleRadius = W/20 + Math.random()*W/10;
 var time =0;
 var init =0;
 var endval=15;
-for(var i=0;i<500;i++)
+for(var i=0;i<1000;i++)
 {   
     if(i>init&&i<endval)
     {
@@ -190,7 +198,7 @@ for(var i=0;i<500;i++)
     {
         init+=5;
         endval+=5;
-        time+=5000*(1000-2*i)/500;
+        time+=5000*(2000-2*i)/1000;
     }
  
 
